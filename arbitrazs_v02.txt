@@ -1,0 +1,60 @@
+from websocket import WebSocketApp
+from json import dumps, loads
+from pprint import pprint
+import time
+import matplotlib.pyplot as plt
+import threading
+
+URL = "wss://ws-feed.gdax.com"
+
+ethbtc=0
+btcusd=0
+usdeth=0
+
+def on_message(_, message):
+    """Callback executed when a message comes.
+
+    Positional argument:
+    message -- The message itself (string)
+    """
+    a=loads(message)
+    """if (a["product_id"]=="ETH-BTC"):
+        global ethbtc
+        ethbtc=float(a["best_ask"])
+    elif (a["product_id"]=="ETH-USD"):
+        global usdeth
+        usdeth=1/float(a["best_bid"])
+    else:
+        global btcusd
+        btcusd=float(a["best_ask"])
+    #arb=btcusd*ethbtc*usdeth-1
+    #if(abs(arb)>0.004):
+    #print(a)"""
+    
+    print(a)
+    
+
+def on_open(socket):
+    """Callback executed at socket opening.
+
+    Keyword argument:
+    socket -- The websocket itself
+    """
+
+    params1 = {
+        "type": "subscribe",
+        "channels": [{"name": "level2", "product_ids": ["ETH-BTC", "ETH-USD", "BTC-USD"]}]
+    }
+    
+    socket.send(dumps(params1))
+    
+
+
+def main():
+    """Main function."""
+    ws = WebSocketApp(URL, on_open=on_open, on_message=on_message)
+    ws.run_forever()
+
+
+if __name__ == '__main__':
+    main()
