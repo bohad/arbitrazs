@@ -46,35 +46,35 @@ def on_message(_, message):
     #--------------------------------------------------------------------------------------------
     #-------------BTC-USD frissítések------------------------------------------------------------
 
-    if a["type"]=="l2update" and (a["product_id"]=="BTC-USD") and a["changes"][0][0]=="buy":
-        #print('SHIT HAPPENS!')
+    if a["type"] == "l2update" and (a["product_id"] == "BTC-USD") and a["changes"][0][0] == "buy":
+        # print('SHIT HAPPENS!')
         dtype = [('price', float), ('size', float)]
         for value in a['changes']:
             print(value)
-            #print(len(r_ask_BTCUSD))
-            if(float(value[2])==0):
-                j=float(value[1])
-                #print(j)
+            # print(len(r_ask_BTCUSD))
+            if (float(value[2]) == 0):
+                j = float(value[1])
+                # print(j)
                 for k in range(len(r_ask_BTCUSD)):
-                    if (r_ask_BTCUSD[k][0]==j):
-                        #print(r_ask_BTCUSD[k][0])
-                        r_ask_BTCUSD.pop(k)
+                    if (r_ask_BTCUSD[k][0] == j):
+                        # print(r_ask_BTCUSD[k][0])
+                        r_ask_BTCUSD = np.delete(r_ask_BTCUSD, k)
 
             else:
                 r_ask_BTCUSD.append((float(value[1]), float(value[2])))
                 time_ask_BTCUSD.append(a["time"])
         _r_ask_BTCUSD = np.array(r_ask_BTCUSD, dtype=dtype)
         _r_ask_BTCUSD = np.sort(_r_ask_BTCUSD, order='price')[::1]
-        r_ask_BTCUSD = [_r_ask_BTCUSD[i] for i in range(10)]
-        #print("ask")
+        r_ask_BTCUSD = [_r_ask_BTCUSD[i] for i in range(min(len(_r_ask_BTCUSD), 10))]
+        # print("ask")
         print(r_ask_BTCUSD)
-        #print(value[2])
-        #print(len(time_ask_BTCUSD))
-        #print(time_ask_BTCUSD[0])
-        #print(r_ask_BTCUSD)
-        #print(_r_ask_BTCUSD)
-        #print('On update 1 : ', r_ask_BTCUSD[0])
-        #exit(1)
+        # print(value[2])
+        # print(len(time_ask_BTCUSD))
+        # print(time_ask_BTCUSD[0])
+        # print(r_ask_BTCUSD)
+        # print(_r_ask_BTCUSD)
+        # print('On update 1 : ', r_ask_BTCUSD[0])
+        # exit(1)
 
 
     if a["type"]=="l2update" and (a["product_id"]=="BTC-USD") and a["changes"][0][0]=="sell":
